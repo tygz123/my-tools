@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的私人工具箱</title>
+    <title>我的私人工具箱 - 马拉松报名合并器</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
-            max-width: 800px; 
+            max-width: 1000px; 
             margin: 0 auto; 
             padding: 20px; 
             background: #f5f5f5; 
@@ -31,9 +31,6 @@
             text-decoration: none; 
             font-size: 14px;
         }
-        .links-bar a:hover {
-            background: #357abd;
-        }
         .tool-box { 
             background: white; 
             border-radius: 10px; 
@@ -47,23 +44,107 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
-        input, button, select { 
-            padding: 10px; 
-            margin: 5px 0; 
-            border: 1px solid #ddd; 
-            border-radius: 5px; 
-            width: 100%; 
-            box-sizing: border-box;
-        }
         button { 
+            padding: 10px 20px; 
+            margin: 5px 5px 5px 0; 
             background: #4a90e2; 
             color: white; 
             border: none; 
+            border-radius: 5px; 
             cursor: pointer; 
-            font-size: 16px;
+            font-size: 14px;
         }
         button:hover { 
             background: #357abd; 
+        }
+        button.danger {
+            background: #e25a4a;
+        }
+        button.danger:hover {
+            background: #c44a3a;
+        }
+        .file-list {
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .file-name {
+            font-weight: bold;
+        }
+        .file-remove {
+            color: #e25a4a;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .config-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .target-fields {
+            margin-bottom: 20px;
+        }
+        .field-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .field-row input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .field-row select {
+            flex: 2;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .field-row button {
+            width: auto;
+            margin: 0;
+            background: #e25a4a;
+        }
+        .add-field {
+            background: #28a745;
+            margin-top: 10px;
+        }
+        .file-header-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .file-header-preview table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .file-header-preview th, .file-header-preview td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
         }
         .footer { 
             text-align: center; 
@@ -73,84 +154,353 @@
             border-top: 1px solid #ddd;
             padding-top: 20px;
         }
-        #qrResult {
-            text-align: center;
-            margin-top: 20px;
-        }
-        #qrResult img {
-            margin: 0 auto;
-        }
-        .file-info {
+        .usage-tip {
             font-size: 12px;
-            color: #666;
+            color: #999;
             margin-top: 5px;
+        }
+        .loading {
+            display: inline-block;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a90e2;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <h1>🧰 我的工具箱（私人版）</h1>
+    <h1>🧰 我的工具箱 · 马拉松报名合并器</h1>
     
-    <!-- 外部链接栏：点击跳转其他网页 -->
     <div class="links-bar">
         <a href="https://chat.openai.com" target="_blank">🤖 AI聊天</a>
-        <a href="https://fanyi.baidu.com" target="_blank">🌐 百度翻译</a>
+        <a href="https://fanyi.sogou.com" target="_blank">🌐 搜狗翻译</a>
         <a href="https://cli.im" target="_blank">📷 草料二维码</a>
-        <a href="https://www.baidu.com" target="_blank">🔍 百度搜索</a>
-        <a href="https://www.google.com" target="_blank">🌍 Google</a>
+        <a href="#" onclick="document.getElementById('qrTool').scrollIntoView();return false;">⬇️ 二维码生成</a>
     </div>
 
-    <!-- 二维码生成工具 -->
+    <!-- 马拉松报名合并器 -->
     <div class="tool-box">
+        <h3>🏃 马拉松报名合并器</h3>
+        <p style="color: #666;">上传多个不同格式的报名表，按你需要的字段合并成一个总表。</p>
+        
+        <!-- 文件上传区域 -->
+        <div>
+            <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv" style="display: none;">
+            <button onclick="document.getElementById('fileInput').click()">📁 选择报名表文件（可多选）</button>
+            <span id="fileCount" style="margin-left: 10px;"></span>
+        </div>
+
+        <!-- 已上传文件列表 -->
+        <div id="fileListContainer" style="display: none;">
+            <h4>已上传文件：</h4>
+            <div class="file-list" id="fileList"></div>
+        </div>
+
+        <!-- 字段映射配置区（初始隐藏） -->
+        <div id="configArea" style="display: none;">
+            <div class="config-section">
+                <h4>步骤1：定义你要合并的目标字段</h4>
+                <p class="usage-tip">例如：姓名、手机号、身份证号、参赛项目、衣服尺码……</p>
+                <div id="targetFieldsContainer" class="target-fields"></div>
+                <button class="add-field" onclick="addTargetField()">➕ 添加目标字段</button>
+            </div>
+
+            <div class="config-section">
+                <h4>步骤2：为每个目标字段选择对应的源文件列</h4>
+                <p class="usage-tip">对于每个目标字段，从下方各文件的表头中选择匹配的列名（不同文件可以选不同列）。</p>
+                <div id="mappingContainer"></div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <button onclick="mergeAndExport()" style="background: #28a745; font-size: 16px;">🚀 开始合并并下载总表</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 二维码生成工具（保留） -->
+    <div class="tool-box" id="qrTool">
         <h3>📷 二维码生成器</h3>
-        <input type="text" id="qrInput" placeholder="输入文字或网址，例如：https://www.baidu.com">
+        <input type="text" id="qrInput" placeholder="输入文字或网址">
         <button onclick="generateQR()">生成二维码</button>
-        <div id="qrResult"></div>
-    </div>
-
-    <!-- 批量表格处理入口（准备阶段） -->
-    <div class="tool-box">
-        <h3>📊 批量表格处理</h3>
-        <p>功能开发中，下一阶段完善。你可以上传Excel文件试试：</p>
-        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
-        <div class="file-info">支持 .xlsx, .xls, .csv 格式</div>
-        <button onclick="alert('表格处理功能即将上线，敬请期待！')">处理表格</button>
-    </div>
-
-    <!-- 翻译工具（后续会完善） -->
-    <div class="tool-box">
-        <h3>🌐 翻译</h3>
-        <p>翻译功能即将上线</p>
-        <select id="langSelect">
-            <option value="en">英语</option>
-            <option value="jp">日语</option>
-            <option value="kor">韩语</option>
-            <option value="fra">法语</option>
-        </select>
-        <input type="text" id="translateInput" placeholder="输入要翻译的文字">
-        <button onclick="alert('翻译功能开发中，敬请期待！')">翻译</button>
+        <div id="qrResult" style="text-align: center; margin-top: 10px;"></div>
     </div>
 
     <div class="footer">
-        ⚡ 完全免费 · 所有功能在本地运行 · 永不收费<br>
-        <span style="font-size: 12px;">v1.0.0</span>
+        ⚡ 完全免费 · 所有处理在本地完成 · 永不收费<br>
+        <span style="font-size: 12px;">v2.0 - 新增马拉松报名合并器</span>
     </div>
 
-    <!-- 二维码生成功能需要的库和代码 -->
+    <!-- 引入依赖库 -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
     <script>
+        // ---------- 二维码生成 ----------
         function generateQR() {
             let text = document.getElementById('qrInput').value;
-            if (!text) { 
-                alert('请输入内容'); 
-                return; 
-            }
+            if (!text) { alert('请输入内容'); return; }
             let qrDiv = document.getElementById('qrResult');
-            qrDiv.innerHTML = ''; // 清空上次的二维码
-            new QRCode(qrDiv, { 
-                text: text, 
-                width: 200, 
-                height: 200 
+            qrDiv.innerHTML = '';
+            new QRCode(qrDiv, { text: text, width: 200, height: 200 });
+        }
+
+        // ---------- 马拉松合并器 ----------
+        // 存储上传的文件数据
+        let uploadedFiles = []; // 每个元素: { file, name, data, headers, previewRows }
+
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+        async function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
+
+            document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
+            document.getElementById('fileListContainer').style.display = 'block';
+            
+            // 显示加载提示
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '<div>正在解析文件，请稍候...</div>';
+
+            // 逐个解析文件
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                try {
+                    const data = await readFileAsArrayBuffer(file);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    if (jsonData.length < 1) {
+                        alert(`文件 ${file.name} 没有数据，已跳过`);
+                        continue;
+                    }
+                    
+                    const headers = jsonData[0]; // 第一行作为表头
+                    const previewRows = jsonData.slice(1, 4); // 预览前3行
+                    
+                    uploadedFiles.push({
+                        file: file,
+                        name: file.name,
+                        data: jsonData, // 全部数据
+                        headers: headers,
+                        previewRows: previewRows
+                    });
+                } catch (e) {
+                    alert(`解析文件 ${file.name} 失败: ${e.message}`);
+                }
+            }
+
+            renderFileList();
+            if (uploadedFiles.length > 0) {
+                document.getElementById('configArea').style.display = 'block';
+                initTargetFields(); // 初始化默认目标字段
+                renderMapping();
+            } else {
+                document.getElementById('configArea').style.display = 'none';
+            }
+        }
+
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
             });
+        }
+
+        function renderFileList() {
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '';
+            uploadedFiles.forEach((f, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <span class="file-name">📄 ${f.name}</span>
+                    <span class="file-remove" onclick="removeFile(${index})" title="移除">✖</span>
+                `;
+                fileListDiv.appendChild(item);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+            if (uploadedFiles.length === 0) {
+                document.getElementById('configArea').style.display = 'none';
+                document.getElementById('fileListContainer').style.display = 'none';
+                document.getElementById('fileCount').innerText = '';
+            } else {
+                renderMapping(); // 重新渲染映射
+            }
+        }
+
+        // 目标字段管理
+        let targetFields = ['姓名', '手机号', '身份证号']; // 默认
+
+        function initTargetFields() {
+            targetFields = ['姓名', '手机号', '身份证号'];
+            renderTargetFields();
+        }
+
+        function renderTargetFields() {
+            const container = document.getElementById('targetFieldsContainer');
+            container.innerHTML = '';
+            targetFields.forEach((field, idx) => {
+                const row = document.createElement('div');
+                row.className = 'field-row';
+                row.innerHTML = `
+                    <input type="text" value="${field}" placeholder="字段名" onchange="updateTargetField(${idx}, this.value)">
+                    <button class="danger" onclick="removeTargetField(${idx})">删除</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function updateTargetField(idx, newValue) {
+            targetFields[idx] = newValue;
+            renderMapping(); // 更新映射UI
+        }
+
+        function addTargetField() {
+            targetFields.push('新字段');
+            renderTargetFields();
+            renderMapping();
+        }
+
+        function removeTargetField(idx) {
+            targetFields.splice(idx, 1);
+            renderTargetFields();
+            renderMapping();
+        }
+
+        // 渲染每个目标字段对应的列选择器
+        function renderMapping() {
+            const container = document.getElementById('mappingContainer');
+            if (uploadedFiles.length === 0) return;
+            
+            container.innerHTML = '';
+            
+            // 为每个目标字段创建一个区块
+            targetFields.forEach((targetField, targetIdx) => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.style.marginBottom = '20px';
+                fieldDiv.style.padding = '10px';
+                fieldDiv.style.background = '#fff';
+                fieldDiv.style.borderRadius = '4px';
+                fieldDiv.style.border = '1px solid #ddd';
+                
+                fieldDiv.innerHTML = `<strong style="font-size:16px;">📌 ${targetField}</strong>`;
+                
+                // 为每个文件创建一个下拉框
+                uploadedFiles.forEach((file, fileIdx) => {
+                    const fileHeader = file.headers || [];
+                    const selectId = `map_${targetIdx}_${fileIdx}`;
+                    
+                    const row = document.createElement('div');
+                    row.style.marginTop = '8px';
+                    row.style.display = 'flex';
+                    row.style.alignItems = 'center';
+                    row.style.gap = '10px';
+                    
+                    row.innerHTML = `
+                        <span style="width:150px; overflow:hidden; text-overflow:ellipsis;" title="${file.name}">📁 ${file.name.substring(0,20)}...</span>
+                        <select id="${selectId}" style="flex:1;">
+                            <option value="">-- 忽略此列 --</option>
+                            ${fileHeader.map(h => `<option value="${h}">${h}</option>`).join('')}
+                        </select>
+                    `;
+                    
+                    fieldDiv.appendChild(row);
+                    
+                    // 预览该文件的前几行数据
+                    if (file.previewRows && file.previewRows.length > 0) {
+                        const previewDiv = document.createElement('div');
+                        previewDiv.style.marginLeft = '160px';
+                        previewDiv.style.fontSize = '11px';
+                        previewDiv.style.color = '#666';
+                        previewDiv.innerHTML = `预览: ${file.previewRows.map(r => r.join(' | ')).join(' ; ')}`;
+                        fieldDiv.appendChild(previewDiv);
+                    }
+                });
+                
+                container.appendChild(fieldDiv);
+            });
+        }
+
+        // 合并并导出
+        function mergeAndExport() {
+            if (uploadedFiles.length === 0) {
+                alert('请先上传文件');
+                return;
+            }
+            if (targetFields.length === 0) {
+                alert('请至少定义一个目标字段');
+                return;
+            }
+
+            // 收集所有映射关系
+            const mappings = []; // 每个目标字段: { targetField, fileMappings: [{fileIdx, sourceColumn}] }
+            targetFields.forEach((targetField, targetIdx) => {
+                const fileMappings = [];
+                uploadedFiles.forEach((file, fileIdx) => {
+                    const select = document.getElementById(`map_${targetIdx}_${fileIdx}`);
+                    if (select) {
+                        const sourceColumn = select.value;
+                        if (sourceColumn) {
+                            fileMappings.push({ fileIdx, sourceColumn });
+                        }
+                    }
+                });
+                mappings.push({ targetField, fileMappings });
+            });
+
+            // 准备合并数据
+            const mergedData = [];
+            // 先添加表头
+            const headerRow = targetFields;
+            mergedData.push(headerRow);
+
+            // 遍历每个文件
+            uploadedFiles.forEach((file, fileIdx) => {
+                const jsonData = file.data; // 二维数组，第一行是表头
+                if (jsonData.length <= 1) return; // 只有表头，无数据
+                
+                const dataRows = jsonData.slice(1); // 数据行
+                const fileHeaders = file.headers; // 原始表头
+                
+                dataRows.forEach(row => {
+                    const newRow = [];
+                    // 对每个目标字段，找到对应的源列索引
+                    mappings.forEach(({ fileMappings }) => {
+                        // 找到当前文件在这个目标字段上的映射
+                        const mapping = fileMappings.find(m => m.fileIdx === fileIdx);
+                        if (mapping) {
+                            const sourceColIdx = fileHeaders.indexOf(mapping.sourceColumn);
+                            if (sourceColIdx !== -1 && sourceColIdx < row.length) {
+                                newRow.push(row[sourceColIdx]);
+                            } else {
+                                newRow.push(''); // 未找到列或数据为空
+                            }
+                        } else {
+                            newRow.push(''); // 该文件没有对应此字段
+                        }
+                    });
+                    mergedData.push(newRow);
+                });
+            });
+
+            // 生成Excel并下载
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(mergedData);
+            XLSX.utils.book_append_sheet(wb, ws, '合并结果');
+            XLSX.writeFile(wb, `马拉松报名合并表_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
     </script>
 </body>
