@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的工具箱 · 马拉松版</title>
+    <title>糖油果子的工具箱</title>
     <style>
         * {
             margin: 0;
@@ -71,45 +71,6 @@
         .main-content {
             flex: 1;
             min-width: 0;
-        }
-
-        /* 顶部问候/升级条 */
-        .upgrade-banner {
-            background: linear-gradient(135deg, #2a1c3a, #1f2937);
-            border-radius: 24px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #374151;
-        }
-
-        .banner-text h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .banner-text p {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-
-        .upgrade-btn {
-            background: #7c3aed;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .upgrade-btn:hover {
-            background: #8b5cf6;
-            transform: scale(1.02);
         }
 
         /* 卡片通用样式 */
@@ -223,6 +184,47 @@
             background: #3a3a44;
         }
 
+        .lang-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .lang-selector select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .switch-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2a2a32;
+            border: 1px solid #3a3a44;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .switch-btn:hover {
+            background: #3a3a44;
+        }
+        .translation-result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #25252b;
+            border-radius: 16px;
+            border-left: 4px solid #7c3aed;
+            font-size: 16px;
+            min-height: 50px;
+        }
+        .usage-tip {
+            font-size: 12px;
+            color: #71717a;
+            margin-top: 5px;
+        }
+
         .footer {
             text-align: center;
             color: #5f5f6b;
@@ -237,7 +239,7 @@
     <div class="app-container">
         <!-- 左侧导航栏 -->
         <div class="sidebar">
-            <div class="logo">🏃 马拉松工具</div>
+            <div class="logo">🍬 糖油果子的工具箱</div>
             <a href="#" class="nav-item active">🏠 仪表盘</a>
             <a href="#" class="nav-item">📊 报名合并</a>
             <a href="#" class="nav-item">📷 二维码</a>
@@ -247,16 +249,7 @@
 
         <!-- 右侧主内容 -->
         <div class="main-content">
-            <!-- 升级横幅 -->
-            <div class="upgrade-banner">
-                <div class="banner-text">
-                    <h2>🔥 获取海量付费课程</h2>
-                    <p>升级会员，观看、学习、创作、探索。</p>
-                </div>
-                <button class="upgrade-btn">立即升级 →</button>
-            </div>
-
-            <!-- 日程卡片（单独一行） -->
+            <!-- 日程卡片 -->
             <div class="card">
                 <div class="card-header">
                     <h3>📅 周一 · 3月5日</h3>
@@ -285,6 +278,35 @@
                 </div>
             </div>
 
+            <!-- ========== 新增翻译卡片 ========== -->
+            <div class="tool-box">
+                <h3>🌐 搜狗翻译</h3>
+                <p style="color: #a1a1aa; font-size: 14px;">支持中英互译，简单快速</p>
+
+                <div class="lang-selector">
+                    <select id="sourceLang">
+                        <option value="auto">自动检测</option>
+                        <option value="zh-CHS">中文</option>
+                        <option value="en">英语</option>
+                    </select>
+                    
+                    <button class="switch-btn" onclick="swapLanguages()" title="交换语言">⇄</button>
+                    
+                    <select id="targetLang">
+                        <option value="en">英语</option>
+                        <option value="zh-CHS" selected>中文</option>
+                    </select>
+                </div>
+                
+                <input type="text" id="translateInput" placeholder="输入要翻译的文字">
+                <button onclick="doSogouTranslation()" style="background: #7c3aed;">翻译</button>
+                
+                <div class="translation-result" id="translationResult">
+                    翻译结果会显示在这里
+                </div>
+                <div class="usage-tip">免费接口，每日有调用次数限制，个人使用足够</div>
+            </div>
+
             <!-- 马拉松合并器卡片 -->
             <div class="tool-box">
                 <h3>🏃 马拉松报名合并器</h3>
@@ -309,7 +331,7 @@
             </div>
 
             <div class="footer">
-                ⚡ 完全免费 · 本地处理 · 永不收费 · v3.1 纯净版
+                ⚡ 完全免费 · 本地处理 · 永不收费 · 糖油果子专属
             </div>
         </div>
     </div>
@@ -319,7 +341,7 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 
     <script>
-        // 二维码生成
+        // ---------- 二维码生成 ----------
         function generateQR() {
             let text = document.getElementById('qrInput').value;
             if (!text) { alert('请输入内容'); return; }
@@ -328,7 +350,7 @@
             new QRCode(qrDiv, { text: text, width: 180, height: 180 });
         }
 
-        // 文件上传显示
+        // ---------- 文件上传显示 ----------
         document.getElementById('fileInput')?.addEventListener('change', function(e) {
             const files = e.target.files;
             document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
@@ -339,6 +361,68 @@
                 listDiv.innerHTML += `<div style="padding: 6px; border-bottom: 1px solid #2a2a32;">📄 ${f.name}</div>`;
             }
         });
+
+        // ---------- 搜狗翻译 ----------
+        function swapLanguages() {
+            const sourceSelect = document.getElementById('sourceLang');
+            const targetSelect = document.getElementById('targetLang');
+            
+            if (sourceSelect.value === 'auto') {
+                alert('请先选择源语言，不能交换"自动检测"');
+                return;
+            }
+            
+            const temp = sourceSelect.value;
+            sourceSelect.value = targetSelect.value;
+            targetSelect.value = temp;
+        }
+
+        async function doSogouTranslation() {
+            const text = document.getElementById('translateInput').value.trim();
+            if (!text) {
+                alert('请输入要翻译的文字');
+                return;
+            }
+
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+            const resultDiv = document.getElementById('translationResult');
+            
+            resultDiv.innerHTML = '⏳ 翻译中...';
+            resultDiv.style.color = '#666';
+
+            try {
+                const params = new URLSearchParams({
+                    from: sourceLang,
+                    to: targetLang,
+                    text: text,
+                    client: 'web',
+                    version: '1.0',
+                    uuid: Date.now().toString()
+                });
+
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const targetUrl = 'https://fanyi.sogou.com/reventondc/api/sogouTranslate';
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl + '?' + params.toString()));
+                
+                if (!response.ok) throw new Error('网络请求失败');
+                
+                const data = await response.json();
+                
+                if (data.errorCode === '0' && data.translation) {
+                    resultDiv.innerHTML = data.translation;
+                    resultDiv.style.color = '#e1e1e6';
+                } else {
+                    throw new Error('翻译失败，请稍后重试');
+                }
+
+            } catch (error) {
+                console.error('翻译错误：', error);
+                resultDiv.innerHTML = `❌ 翻译失败：请直接使用<a href="https://fanyi.sogou.com" target="_blank" style="color: #7c3aed;">搜狗翻译官网</a>`;
+                resultDiv.style.color = '#d32f2f';
+            }
+        }
     </script>
 </body>
 </html>
