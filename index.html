@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的私人工具箱</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .links-bar { 
+            display: flex; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            margin-bottom: 30px; 
+            justify-content: center;
+        }
+        .links-bar a { 
+            background: #4a90e2; 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-size: 14px;
+        }
+        .links-bar a:hover {
+            background: #357abd;
+        }
+        .tool-box { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        .tool-box h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        input, button, select { 
+            padding: 10px; 
+            margin: 5px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            width: 100%; 
+            box-sizing: border-box;
+        }
+        button { 
+            background: #4a90e2; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 16px;
+        }
+        button:hover { 
+            background: #357abd; 
+        }
+        .footer { 
+            text-align: center; 
+            color: #666; 
+            margin-top: 40px; 
+            font-size: 14px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        #qrResult {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #qrResult img {
+            margin: 0 auto;
+        }
+        .file-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧰 我的工具箱（私人版）</h1>
+    
+    <!-- 外部链接栏：点击跳转其他网页 -->
+    <div class="links-bar">
+        <a href="https://chat.openai.com" target="_blank">🤖 AI聊天</a>
+        <a href="https://fanyi.baidu.com" target="_blank">🌐 百度翻译</a>
+        <a href="https://cli.im" target="_blank">📷 草料二维码</a>
+        <a href="https://www.baidu.com" target="_blank">🔍 百度搜索</a>
+        <a href="https://www.google.com" target="_blank">🌍 Google</a>
+    </div>
+
+    <!-- 二维码生成工具 -->
+    <div class="tool-box">
+        <h3>📷 二维码生成器</h3>
+        <input type="text" id="qrInput" placeholder="输入文字或网址，例如：https://www.baidu.com">
+        <button onclick="generateQR()">生成二维码</button>
+        <div id="qrResult"></div>
+    </div>
+
+    <!-- 批量表格处理入口（准备阶段） -->
+    <div class="tool-box">
+        <h3>📊 批量表格处理</h3>
+        <p>功能开发中，下一阶段完善。你可以上传Excel文件试试：</p>
+        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
+        <div class="file-info">支持 .xlsx, .xls, .csv 格式</div>
+        <button onclick="alert('表格处理功能即将上线，敬请期待！')">处理表格</button>
+    </div>
+
+    <!-- 翻译工具（后续会完善） -->
+    <div class="tool-box">
+        <h3>🌐 翻译</h3>
+        <p>翻译功能即将上线</p>
+        <select id="langSelect">
+            <option value="en">英语</option>
+            <option value="jp">日语</option>
+            <option value="kor">韩语</option>
+            <option value="fra">法语</option>
+        </select>
+        <input type="text" id="translateInput" placeholder="输入要翻译的文字">
+        <button onclick="alert('翻译功能开发中，敬请期待！')">翻译</button>
+    </div>
+
+    <div class="footer">
+        ⚡ 完全免费 · 所有功能在本地运行 · 永不收费<br>
+        <span style="font-size: 12px;">v1.0.0</span>
+    </div>
+
+    <!-- 二维码生成功能需要的库和代码 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        function generateQR() {
+            let text = document.getElementById('qrInput').value;
+            if (!text) { 
+                alert('请输入内容'); 
+                return; 
+            }
+            let qrDiv = document.getElementById('qrResult');
+            qrDiv.innerHTML = ''; // 清空上次的二维码
+            new QRCode(qrDiv, { 
+                text: text, 
+                width: 200, 
+                height: 200 
+            });
+        }
+    </script>
+</body>
+</html>
