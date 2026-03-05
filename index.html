@@ -27,7 +27,7 @@
             gap: 24px;
         }
 
-        /* ---------- 左侧导航 ---------- */
+        /* 左侧导航 */
         .sidebar {
             width: 260px;
             flex-shrink: 0;
@@ -59,6 +59,7 @@
             margin-bottom: 4px;
             transition: 0.2s;
             font-weight: 500;
+            cursor: pointer;
         }
 
         .nav-item:hover,
@@ -67,14 +68,14 @@
             color: #fff;
         }
 
-        /* ---------- 右侧主内容 ---------- */
+        /* 右侧主内容 */
         .main-content {
             flex: 1;
             min-width: 0;
         }
 
-        /* 卡片通用样式 */
-        .card {
+        /* 卡片通用 */
+        .card, .tool-box {
             background: #1a1a1f;
             border-radius: 24px;
             padding: 20px;
@@ -103,56 +104,8 @@
             color: #a78bfa;
         }
 
-        /* 日程/时间轴 */
-        .timeline-item {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            align-items: flex-start;
-        }
-
-        .timeline-time {
-            min-width: 60px;
-            color: #71717a;
-            font-size: 14px;
-        }
-
-        .timeline-content {
-            flex: 1;
-            background: #25252b;
-            padding: 12px;
-            border-radius: 16px;
-        }
-
-        .timeline-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .timeline-desc {
-            font-size: 13px;
-            color: #a1a1aa;
-        }
-
-        /* 工具箱工具卡片 */
-        .tool-box {
-            background: #1a1a1f;
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid #2a2a32;
-            margin-bottom: 24px;
-        }
-
-        .tool-box h3 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-            margin-bottom: 16px;
-            color: #a1a1aa;
-        }
-
-        input, select {
+        /* 表单元素 */
+        input, select, textarea {
             background: #25252b;
             border: 1px solid #2a2a32;
             color: #e1e1e6;
@@ -182,6 +135,11 @@
 
         button:hover {
             background: #3a3a44;
+        }
+
+        .small-btn {
+            padding: 6px 12px;
+            font-size: 14px;
         }
 
         .lang-selector {
@@ -225,6 +183,80 @@
             margin-top: 5px;
         }
 
+        /* 日程列表样式 */
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a32;
+        }
+        .schedule-time {
+            min-width: 60px;
+            color: #a78bfa;
+            font-weight: 500;
+        }
+        .schedule-desc {
+            flex: 1;
+        }
+        .schedule-actions button {
+            padding: 4px 8px;
+            margin: 0 2px;
+            font-size: 12px;
+        }
+        .edit-input {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+        }
+        .edit-input input {
+            margin-bottom: 0;
+            padding: 6px 10px;
+        }
+
+        /* 合并器专用样式 */
+        .file-list {
+            background: #25252b;
+            border-radius: 16px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px;
+            border-bottom: 1px solid #2a2a32;
+        }
+        .config-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #25252b;
+            border-radius: 16px;
+        }
+        .field-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .field-row input {
+            flex: 1;
+            min-width: 150px;
+        }
+        .field-row select {
+            flex: 2;
+        }
+        .field-row button {
+            width: auto;
+            background: #e25a4a;
+        }
+        .add-field {
+            background: #28a745;
+        }
+
         .footer {
             text-align: center;
             color: #5f5f6b;
@@ -237,101 +269,134 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- 左侧导航栏 -->
+        <!-- 左侧导航 -->
         <div class="sidebar">
             <div class="logo">🍬 糖油果子的工具箱</div>
-            <a href="#" class="nav-item active">🏠 仪表盘</a>
-            <a href="#" class="nav-item">📊 报名合并</a>
-            <a href="#" class="nav-item">📷 二维码</a>
-            <a href="#" class="nav-item">🌐 翻译</a>
-            <a href="#" class="nav-item">⚙️ 设置</a>
+            <a class="nav-item" onclick="showSection('dashboard', this); return false;">🏠 仪表盘</a>
+            <a class="nav-item" onclick="showSection('merge', this); return false;">📊 报名合并</a>
+            <a class="nav-item" onclick="showSection('qrcode', this); return false;">📷 二维码</a>
+            <a class="nav-item" onclick="showSection('translate', this); return false;">🌐 翻译</a>
+            <a class="nav-item" onclick="showSection('settings', this); return false;">⚙️ 设置</a>
         </div>
 
         <!-- 右侧主内容 -->
         <div class="main-content">
-            <!-- 日程卡片 -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>📅 周一 · 3月5日</h3>
-                    <span class="badge">今日</span>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">08:00</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">马拉松报名开启</div>
-                        <div class="timeline-desc">准备好你的报名表模板</div>
+            <!-- 仪表盘（默认显示） -->
+            <div id="dashboard-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📅 <span id="currentDateDisplay"></span></h3>
+                        <div>
+                            <button class="small-btn" onclick="changeDate(-1)">←</button>
+                            <input type="date" id="datePicker" style="width: 140px; display: inline-block; margin: 0 5px; padding: 6px;">
+                            <button class="small-btn" onclick="changeDate(1)">→</button>
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">11:00</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">设计组会议</div>
-                        <div class="timeline-desc">讨论号码布设计</div>
+                    <div id="scheduleList">
+                        <!-- 日程列表由JS动态生成 -->
                     </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">15:00</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">测试合并脚本</div>
-                        <div class="timeline-desc">验证不同表头映射</div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="newScheduleTime" placeholder="时间 (可选)" style="width: 100px;">
+                        <input type="text" id="newScheduleDesc" placeholder="日程内容" style="flex:1;">
+                        <button onclick="addSchedule()">添加</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ========== 新增翻译卡片 ========== -->
-            <div class="tool-box">
-                <h3>🌐 搜狗翻译</h3>
-                <p style="color: #a1a1aa; font-size: 14px;">支持中英互译，简单快速</p>
-
-                <div class="lang-selector">
-                    <select id="sourceLang">
-                        <option value="auto">自动检测</option>
-                        <option value="zh-CHS">中文</option>
-                        <option value="en">英语</option>
-                    </select>
+            <!-- 合并器 -->
+            <div id="merge-section" style="display: none;">
+                <div class="tool-box">
+                    <h3>🏃 马拉松报名合并器</h3>
+                    <p style="color: #a1a1aa;">上传多个不同格式的报名表，按你需要的字段合并成一个总表。</p>
                     
-                    <button class="switch-btn" onclick="swapLanguages()" title="交换语言">⇄</button>
+                    <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv" style="display: none;">
+                    <button onclick="document.getElementById('fileInput').click()">📁 上传报名表（可多选）</button>
+                    <span id="fileCount" style="margin-left: 10px; color: #9ca3af;"></span>
+
+                    <div id="fileListContainer" style="display: none; margin-top: 16px;">
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+
+                    <div id="configArea" style="display: none;">
+                        <div class="config-section">
+                            <h4>步骤1：定义你要合并的目标字段</h4>
+                            <p class="usage-tip">例如：姓名、手机号、身份证号、参赛项目……</p>
+                            <div id="targetFieldsContainer" class="target-fields"></div>
+                            <button class="add-field" onclick="addTargetField()">➕ 添加目标字段</button>
+                        </div>
+
+                        <div class="config-section">
+                            <h4>步骤2：为每个目标字段选择对应的源文件列</h4>
+                            <p class="usage-tip">对于每个目标字段，从下方各文件的表头中选择匹配的列名。</p>
+                            <div id="mappingContainer"></div>
+                        </div>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <button onclick="mergeAndExport()" style="background: #7c3aed; font-size: 16px;">🚀 开始合并并下载总表</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 二维码 -->
+            <div id="qrcode-section" style="display: none;">
+                <div class="tool-box">
+                    <h3>📷 二维码生成器</h3>
+                    <input type="text" id="qrInput" placeholder="输入文字或网址">
+                    <button onclick="generateQR()">生成二维码</button>
+                    <div id="qrResult" style="text-align: center; margin-top: 16px;"></div>
+                </div>
+            </div>
+
+            <!-- 翻译 -->
+            <div id="translate-section" style="display: none;">
+                <div class="tool-box">
+                    <h3>🌐 MyMemory 翻译（免密钥）</h3>
+                    <p style="color: #a1a1aa;">每天免费1000次，个人足够</p>
+
+                    <div class="lang-selector">
+                        <select id="sourceLang">
+                            <option value="auto">自动检测</option>
+                            <option value="zh">中文</option>
+                            <option value="en">英语</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="de">德语</option>
+                        </select>
+                        
+                        <button class="switch-btn" onclick="swapLanguages()" title="交换语言">⇄</button>
+                        
+                        <select id="targetLang">
+                            <option value="en">英语</option>
+                            <option value="zh" selected>中文</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="de">德语</option>
+                        </select>
+                    </div>
                     
-                    <select id="targetLang">
-                        <option value="en">英语</option>
-                        <option value="zh-CHS" selected>中文</option>
-                    </select>
-                </div>
-                
-                <input type="text" id="translateInput" placeholder="输入要翻译的文字">
-                <button onclick="doSogouTranslation()" style="background: #7c3aed;">翻译</button>
-                
-                <div class="translation-result" id="translationResult">
-                    翻译结果会显示在这里
-                </div>
-                <div class="usage-tip">免费接口，每日有调用次数限制，个人使用足够</div>
-            </div>
-
-            <!-- 马拉松合并器卡片 -->
-            <div class="tool-box">
-                <h3>🏃 马拉松报名合并器</h3>
-                <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv" style="display: none;">
-                <button onclick="document.getElementById('fileInput').click()">📁 上传报名表（可多选）</button>
-                <span id="fileCount" style="margin-left: 10px; color: #9ca3af;"></span>
-                <div id="fileListContainer" style="display: none; margin-top: 16px;">
-                    <div class="file-list" id="fileList" style="background: #25252b; border-radius: 16px; padding: 12px;"></div>
-                </div>
-                <div style="margin-top: 16px;">
-                    <button onclick="alert('详细映射界面请参考之前的完整版')">⚙️ 配置字段映射</button>
-                    <button style="background: #7c3aed;" onclick="alert('合并功能已准备就绪')">🚀 合并下载</button>
+                    <input type="text" id="translateInput" placeholder="输入要翻译的文字">
+                    <button onclick="doMyMemoryTranslation()" style="background: #7c3aed;">翻译</button>
+                    
+                    <div class="translation-result" id="translationResult">
+                        翻译结果会显示在这里
+                    </div>
+                    <div class="usage-tip">基于 MyMemory 翻译服务，无需密钥。</div>
                 </div>
             </div>
 
-            <!-- 二维码生成器卡片 -->
-            <div class="tool-box">
-                <h3>📷 二维码生成器</h3>
-                <input type="text" id="qrInput" placeholder="输入文字或网址">
-                <button onclick="generateQR()">生成二维码</button>
-                <div id="qrResult" style="text-align: center; margin-top: 16px;"></div>
+            <!-- 设置 -->
+            <div id="settings-section" style="display: none;">
+                <div class="tool-box">
+                    <h3>⚙️ 设置</h3>
+                    <p>未来可添加主题切换等功能。</p>
+                </div>
             </div>
 
             <div class="footer">
-                ⚡ 完全免费 · 本地处理 · 永不收费 · 糖油果子专属
+                ⚡ 完全免费 · 本地处理 · 永不收费 · 糖油果子专属 · v5.0 可编辑日历
             </div>
         </div>
     </div>
@@ -341,6 +406,166 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 
     <script>
+        // ---------- 全局变量 ----------
+        let currentDate = new Date();
+        let currentDateStr = formatDate(currentDate);
+
+        // ---------- 导航切换 ----------
+        function showSection(section, element) {
+            // 隐藏所有内容块
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('merge-section').style.display = 'none';
+            document.getElementById('qrcode-section').style.display = 'none';
+            document.getElementById('translate-section').style.display = 'none';
+            document.getElementById('settings-section').style.display = 'none';
+            
+            // 显示选中的块
+            document.getElementById(section + '-section').style.display = 'block';
+            
+            // 高亮导航
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // ---------- 日期工具函数 ----------
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDisplayDate(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            const d = new Date(year, month-1, day);
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            return `${year}年${month}月${day}日 ${weekdays[d.getDay()]}`;
+        }
+
+        // 初始化日期显示
+        function updateDateDisplay() {
+            document.getElementById('currentDateDisplay').innerText = formatDisplayDate(currentDateStr);
+            document.getElementById('datePicker').value = currentDateStr;
+        }
+
+        // 切换日期（偏移量：-1 前一天，1 后一天）
+        function changeDate(delta) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + delta);
+            currentDate = newDate;
+            currentDateStr = formatDate(currentDate);
+            updateDateDisplay();
+            loadSchedules();
+        }
+
+        // 日期选择器手动选择
+        document.addEventListener('DOMContentLoaded', function() {
+            const picker = document.getElementById('datePicker');
+            if (picker) {
+                picker.addEventListener('change', function(e) {
+                    const newDateStr = e.target.value;
+                    if (newDateStr) {
+                        currentDateStr = newDateStr;
+                        currentDate = new Date(newDateStr + 'T00:00:00');
+                        updateDateDisplay();
+                        loadSchedules();
+                    }
+                });
+            }
+            // 初始化加载今天的日程
+            updateDateDisplay();
+            loadSchedules();
+        });
+
+        // ---------- 日程存储 ----------
+        function getStorageKey() {
+            return `schedules_${currentDateStr}`;
+        }
+
+        function loadSchedules() {
+            const stored = localStorage.getItem(getStorageKey());
+            const schedules = stored ? JSON.parse(stored) : [];
+            renderSchedules(schedules);
+        }
+
+        function saveSchedules(schedules) {
+            localStorage.setItem(getStorageKey(), JSON.stringify(schedules));
+        }
+
+        function renderSchedules(schedules) {
+            const container = document.getElementById('scheduleList');
+            if (!container) return;
+            
+            if (schedules.length === 0) {
+                container.innerHTML = '<p style="color:#71717a; text-align:center; padding:20px;">今日暂无日程，添加一条吧～</p>';
+                return;
+            }
+
+            let html = '';
+            schedules.forEach((item, index) => {
+                const timeHtml = item.time ? `<span class="schedule-time">${item.time}</span>` : '<span class="schedule-time" style="color:#71717a;">(未填)</span>';
+                html += `
+                    <div class="schedule-item" data-index="${index}">
+                        ${timeHtml}
+                        <span class="schedule-desc">${item.desc}</span>
+                        <div class="schedule-actions">
+                            <button onclick="editSchedule(${index})">编辑</button>
+                            <button onclick="deleteSchedule(${index})" style="background:#e25a4a;">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // 添加新日程
+        function addSchedule() {
+            const timeInput = document.getElementById('newScheduleTime');
+            const descInput = document.getElementById('newScheduleDesc');
+            const time = timeInput.value.trim();
+            const desc = descInput.value.trim();
+            if (!desc) {
+                alert('请填写日程内容');
+                return;
+            }
+
+            const stored = localStorage.getItem(getStorageKey());
+            const schedules = stored ? JSON.parse(stored) : [];
+            schedules.push({ time, desc });
+            saveSchedules(schedules);
+            renderSchedules(schedules);
+
+            // 清空输入框
+            timeInput.value = '';
+            descInput.value = '';
+        }
+
+        // 删除日程
+        function deleteSchedule(index) {
+            const stored = localStorage.getItem(getStorageKey());
+            const schedules = stored ? JSON.parse(stored) : [];
+            schedules.splice(index, 1);
+            saveSchedules(schedules);
+            renderSchedules(schedules);
+        }
+
+        // 编辑日程（使用prompt简单编辑）
+        function editSchedule(index) {
+            const stored = localStorage.getItem(getStorageKey());
+            const schedules = stored ? JSON.parse(stored) : [];
+            const item = schedules[index];
+            
+            // 分别编辑时间和内容
+            const newTime = prompt('编辑时间（可选）', item.time || '');
+            if (newTime === null) return; // 取消
+            const newDesc = prompt('编辑内容', item.desc);
+            if (newDesc === null) return;
+
+            schedules[index] = { time: newTime.trim(), desc: newDesc.trim() };
+            saveSchedules(schedules);
+            renderSchedules(schedules);
+        }
+
         // ---------- 二维码生成 ----------
         function generateQR() {
             let text = document.getElementById('qrInput').value;
@@ -350,25 +575,13 @@
             new QRCode(qrDiv, { text: text, width: 180, height: 180 });
         }
 
-        // ---------- 文件上传显示 ----------
-        document.getElementById('fileInput')?.addEventListener('change', function(e) {
-            const files = e.target.files;
-            document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
-            document.getElementById('fileListContainer').style.display = 'block';
-            const listDiv = document.getElementById('fileList');
-            listDiv.innerHTML = '';
-            for (let f of files) {
-                listDiv.innerHTML += `<div style="padding: 6px; border-bottom: 1px solid #2a2a32;">📄 ${f.name}</div>`;
-            }
-        });
-
-        // ---------- 搜狗翻译 ----------
+        // ---------- 翻译功能 (MyMemory) ----------
         function swapLanguages() {
             const sourceSelect = document.getElementById('sourceLang');
             const targetSelect = document.getElementById('targetLang');
             
             if (sourceSelect.value === 'auto') {
-                alert('请先选择源语言，不能交换"自动检测"');
+                alert('自动检测不能作为目标语言，请先选择源语言');
                 return;
             }
             
@@ -377,51 +590,235 @@
             targetSelect.value = temp;
         }
 
-        async function doSogouTranslation() {
+        async function doMyMemoryTranslation() {
             const text = document.getElementById('translateInput').value.trim();
-            if (!text) {
-                alert('请输入要翻译的文字');
-                return;
-            }
+            if (!text) { alert('请输入要翻译的文字'); return; }
 
-            const sourceLang = document.getElementById('sourceLang').value;
-            const targetLang = document.getElementById('targetLang').value;
+            const source = document.getElementById('sourceLang').value;
+            const target = document.getElementById('targetLang').value;
             const resultDiv = document.getElementById('translationResult');
             
+            const langpair = (source === 'auto' ? '' : source) + '|' + target;
+            
             resultDiv.innerHTML = '⏳ 翻译中...';
-            resultDiv.style.color = '#666';
+            resultDiv.style.color = '#a1a1aa';
 
             try {
-                const params = new URLSearchParams({
-                    from: sourceLang,
-                    to: targetLang,
-                    text: text,
-                    client: 'web',
-                    version: '1.0',
-                    uuid: Date.now().toString()
-                });
-
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const targetUrl = 'https://fanyi.sogou.com/reventondc/api/sogouTranslate';
-                
-                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl + '?' + params.toString()));
-                
-                if (!response.ok) throw new Error('网络请求失败');
-                
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
+                const response = await fetch(url);
                 const data = await response.json();
                 
-                if (data.errorCode === '0' && data.translation) {
-                    resultDiv.innerHTML = data.translation;
+                if (data.responseData && data.responseData.translatedText) {
+                    resultDiv.innerHTML = data.responseData.translatedText;
                     resultDiv.style.color = '#e1e1e6';
                 } else {
-                    throw new Error('翻译失败，请稍后重试');
+                    throw new Error('翻译失败');
                 }
-
             } catch (error) {
-                console.error('翻译错误：', error);
-                resultDiv.innerHTML = `❌ 翻译失败：请直接使用<a href="https://fanyi.sogou.com" target="_blank" style="color: #7c3aed;">搜狗翻译官网</a>`;
+                resultDiv.innerHTML = '❌ 翻译失败，请稍后重试';
                 resultDiv.style.color = '#d32f2f';
             }
+        }
+
+        // ---------- 马拉松合并器 (保持之前完整代码) ----------
+        let uploadedFiles = [];
+        let targetFields = ['姓名', '手机号', '身份证号'];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) fileInput.addEventListener('change', handleFileSelect);
+        });
+
+        async function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
+
+            document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
+            document.getElementById('fileListContainer').style.display = 'block';
+            
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '<div>正在解析文件，请稍候...</div>';
+
+            for (let file of files) {
+                try {
+                    const data = await readFileAsArrayBuffer(file);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    if (jsonData.length < 1) continue;
+                    
+                    const headers = jsonData[0];
+                    const previewRows = jsonData.slice(1, 4);
+                    
+                    uploadedFiles.push({
+                        name: file.name,
+                        data: jsonData,
+                        headers: headers,
+                        previewRows: previewRows
+                    });
+                } catch (e) {
+                    alert(`解析文件 ${file.name} 失败: ${e.message}`);
+                }
+            }
+
+            renderFileList();
+            if (uploadedFiles.length > 0) {
+                document.getElementById('configArea').style.display = 'block';
+                renderTargetFields();
+                renderMapping();
+            }
+        }
+
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        function renderFileList() {
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '';
+            uploadedFiles.forEach((f, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <span>📄 ${f.name}</span>
+                    <span class="file-remove" onclick="removeFile(${index})" style="color:#e25a4a; cursor:pointer;">✖</span>
+                `;
+                fileListDiv.appendChild(item);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+            if (uploadedFiles.length === 0) {
+                document.getElementById('configArea').style.display = 'none';
+                document.getElementById('fileListContainer').style.display = 'none';
+                document.getElementById('fileCount').innerText = '';
+            } else {
+                renderMapping();
+            }
+        }
+
+        function renderTargetFields() {
+            const container = document.getElementById('targetFieldsContainer');
+            container.innerHTML = '';
+            targetFields.forEach((field, idx) => {
+                const row = document.createElement('div');
+                row.className = 'field-row';
+                row.innerHTML = `
+                    <input type="text" value="${field}" placeholder="字段名" onchange="updateTargetField(${idx}, this.value)">
+                    <button onclick="removeTargetField(${idx})" style="background:#e25a4a;">删除</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function updateTargetField(idx, newValue) {
+            targetFields[idx] = newValue;
+            renderMapping();
+        }
+
+        function addTargetField() {
+            targetFields.push('新字段');
+            renderTargetFields();
+            renderMapping();
+        }
+
+        function removeTargetField(idx) {
+            targetFields.splice(idx, 1);
+            renderTargetFields();
+            renderMapping();
+        }
+
+        function renderMapping() {
+            const container = document.getElementById('mappingContainer');
+            if (uploadedFiles.length === 0) return;
+            
+            container.innerHTML = '';
+            
+            targetFields.forEach((targetField, targetIdx) => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.style.marginBottom = '20px';
+                fieldDiv.style.padding = '10px';
+                fieldDiv.style.background = '#1a1a1f';
+                fieldDiv.style.borderRadius = '8px';
+                
+                fieldDiv.innerHTML = `<strong style="font-size:16px;">📌 ${targetField}</strong>`;
+                
+                uploadedFiles.forEach((file, fileIdx) => {
+                    const fileHeader = file.headers || [];
+                    const selectId = `map_${targetIdx}_${fileIdx}`;
+                    
+                    const row = document.createElement('div');
+                    row.style.marginTop = '8px';
+                    row.style.display = 'flex';
+                    row.style.alignItems = 'center';
+                    row.style.gap = '10px';
+                    
+                    row.innerHTML = `
+                        <span style="width:150px; overflow:hidden; text-overflow:ellipsis;" title="${file.name}">📁 ${file.name.substring(0,20)}...</span>
+                        <select id="${selectId}" style="flex:1; background:#25252b;">
+                            <option value="">-- 忽略此列 --</option>
+                            ${fileHeader.map(h => `<option value="${h}">${h}</option>`).join('')}
+                        </select>
+                    `;
+                    
+                    fieldDiv.appendChild(row);
+                });
+                
+                container.appendChild(fieldDiv);
+            });
+        }
+
+        function mergeAndExport() {
+            if (uploadedFiles.length === 0) { alert('请先上传文件'); return; }
+            if (targetFields.length === 0) { alert('请至少定义一个目标字段'); return; }
+
+            const mappings = targetFields.map((targetField, targetIdx) => {
+                const fileMappings = [];
+                uploadedFiles.forEach((file, fileIdx) => {
+                    const select = document.getElementById(`map_${targetIdx}_${fileIdx}`);
+                    if (select && select.value) {
+                        fileMappings.push({ fileIdx, sourceColumn: select.value });
+                    }
+                });
+                return { targetField, fileMappings };
+            });
+
+            const mergedData = [targetFields];
+
+            uploadedFiles.forEach((file, fileIdx) => {
+                const jsonData = file.data;
+                if (jsonData.length <= 1) return;
+                
+                const fileHeaders = file.headers;
+                const dataRows = jsonData.slice(1);
+                
+                dataRows.forEach(row => {
+                    const newRow = [];
+                    mappings.forEach(({ fileMappings }) => {
+                        const mapping = fileMappings.find(m => m.fileIdx === fileIdx);
+                        if (mapping) {
+                            const colIdx = fileHeaders.indexOf(mapping.sourceColumn);
+                            newRow.push(colIdx !== -1 && colIdx < row.length ? row[colIdx] : '');
+                        } else {
+                            newRow.push('');
+                        }
+                    });
+                    mergedData.push(newRow);
+                });
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(mergedData);
+            XLSX.utils.book_append_sheet(wb, ws, '合并结果');
+            XLSX.writeFile(wb, `马拉松合并表_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
     </script>
 </body>
