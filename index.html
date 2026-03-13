@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>糖油果子的工具箱</title>
+    <!-- Viewer.js 样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css">
     <style>
         * {
             margin: 0;
@@ -116,7 +118,13 @@
             font-size: 14px;
         }
 
-        input:focus, select:focus {
+        textarea {
+            border-radius: 16px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #7c3aed;
         }
@@ -183,7 +191,109 @@
             margin-top: 5px;
         }
 
-        /* 日程列表样式 */
+        /* 时钟样式 */
+        .clock {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            padding: 10px;
+            background: #25252b;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            color: #a78bfa;
+        }
+
+        /* 日历样式 */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .calendar-header button {
+            background: transparent;
+            border: 1px solid #2a2a32;
+            padding: 5px 10px;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+        .calendar-weekday {
+            color: #71717a;
+            font-size: 12px;
+            padding: 8px 0;
+        }
+        .calendar-day {
+            background: #25252b;
+            border-radius: 16px;
+            padding: 8px 4px;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .calendar-day:hover {
+            background: #2a2a32;
+        }
+        .calendar-day.today {
+            background: #7c3aed;
+            color: white;
+        }
+        .calendar-day.selected {
+            outline: 2px solid #a78bfa;
+            outline-offset: 2px;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        .calendar-day.today.has-event::after {
+            background: white;
+        }
+        .solar-day {
+            font-weight: 600;
+        }
+        .lunar-info {
+            font-size: 10px;
+            color: #a1a1aa;
+            margin-top: 2px;
+        }
+        .calendar-day.today .lunar-info {
+            color: rgba(255,255,255,0.8);
+        }
+        .festival-tag {
+            font-size: 9px;
+            background: #7c3aed;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-top: 4px;
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .calendar-day.today .festival-tag {
+            background: white;
+            color: #7c3aed;
+        }
+
+        /* 日程列表 */
         .schedule-item {
             display: flex;
             align-items: center;
@@ -204,17 +314,109 @@
             margin: 0 2px;
             font-size: 12px;
         }
-        .edit-input {
-            flex: 1;
-            display: flex;
-            gap: 5px;
-        }
-        .edit-input input {
-            margin-bottom: 0;
-            padding: 6px 10px;
+
+        /* 便利贴 */
+        .sticky-note textarea {
+            background: #2a2a32;
+            border: 1px solid #7c3aed;
         }
 
-        /* 合并器专用样式 */
+        /* 图片库样式 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+        .image-item {
+            background: #25252b;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            position: relative;
+        }
+        .image-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .image-name {
+            font-size: 11px;
+            margin: 6px 0;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+        .image-remove {
+            background: #e25a4a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 8px;
+            font-size: 10px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .image-remove:hover {
+            background: #c44a3a;
+        }
+
+        /* 文档库样式 */
+        .doc-list {
+            margin-top: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #25252b;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .doc-icon {
+            font-size: 24px;
+            width: 32px;
+            text-align: center;
+        }
+        .doc-name {
+            flex: 1;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .doc-actions button {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+        .doc-actions button:first-child {
+            background: #7c3aed;
+        }
+        .doc-remove {
+            background: #e25a4a !important;
+        }
+
+        /* 两列布局 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* 合并器专用样式 (保留) */
         .file-list {
             background: #25252b;
             border-radius: 16px;
@@ -266,6 +468,10 @@
             padding-top: 24px;
         }
     </style>
+    <!-- 引入农历库 -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.18/lunar.min.js"></script>
+    <!-- Viewer.js 核心库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -276,29 +482,50 @@
             <a class="nav-item" onclick="showSection('merge', this); return false;">📊 报名合并</a>
             <a class="nav-item" onclick="showSection('qrcode', this); return false;">📷 二维码</a>
             <a class="nav-item" onclick="showSection('translate', this); return false;">🌐 翻译</a>
+            <a class="nav-item" onclick="showSection('image', this); return false;">🖼️ 图片库</a>
+            <a class="nav-item" onclick="showSection('doc', this); return false;">📄 文档库</a>
             <a class="nav-item" onclick="showSection('settings', this); return false;">⚙️ 设置</a>
         </div>
 
         <!-- 右侧主内容 -->
         <div class="main-content">
-            <!-- 仪表盘（默认显示） -->
+            <!-- 仪表盘 -->
             <div id="dashboard-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📅 <span id="currentDateDisplay"></span></h3>
-                        <div>
-                            <button class="small-btn" onclick="changeDate(-1)">←</button>
-                            <input type="date" id="datePicker" style="width: 140px; display: inline-block; margin: 0 5px; padding: 6px;">
-                            <button class="small-btn" onclick="changeDate(1)">→</button>
+                <div class="dashboard-grid">
+                    <!-- 左侧：时钟 + 日历 -->
+                    <div>
+                        <div class="card">
+                            <div class="clock" id="liveClock">--:--:--</div>
+                            <div class="calendar-header">
+                                <button class="small-btn" onclick="changeMonth(-1)">←</button>
+                                <span id="calendarMonthYear">2026年3月</span>
+                                <button class="small-btn" onclick="changeMonth(1)">→</button>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid"></div>
                         </div>
                     </div>
-                    <div id="scheduleList">
-                        <!-- 日程列表由JS动态生成 -->
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="newScheduleTime" placeholder="时间 (可选)" style="width: 100px;">
-                        <input type="text" id="newScheduleDesc" placeholder="日程内容" style="flex:1;">
-                        <button onclick="addSchedule()">添加</button>
+
+                    <!-- 右侧：日程 + 便利贴 -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>📅 日程 · <span id="selectedDateDisplay">今天</span></h3>
+                                <span class="badge" id="eventCount">0条</span>
+                            </div>
+                            <div id="scheduleList" style="min-height: 150px;"></div>
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <input type="text" id="newScheduleTime" placeholder="时间" style="width: 100px;">
+                                <input type="text" id="newScheduleDesc" placeholder="日程内容" style="flex:1;">
+                                <button onclick="addSchedule()">添加</button>
+                            </div>
+                        </div>
+                        <div class="card sticky-note">
+                            <div class="card-header">
+                                <h3>📌 便利贴</h3>
+                                <span class="badge">自动保存</span>
+                            </div>
+                            <textarea id="stickyNote" placeholder="写点什么..."></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -308,31 +535,24 @@
                 <div class="tool-box">
                     <h3>🏃 马拉松报名合并器</h3>
                     <p style="color: #a1a1aa;">上传多个不同格式的报名表，按你需要的字段合并成一个总表。</p>
-                    
                     <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv" style="display: none;">
                     <button onclick="document.getElementById('fileInput').click()">📁 上传报名表（可多选）</button>
                     <span id="fileCount" style="margin-left: 10px; color: #9ca3af;"></span>
-
                     <div id="fileListContainer" style="display: none; margin-top: 16px;">
                         <div class="file-list" id="fileList"></div>
                     </div>
-
                     <div id="configArea" style="display: none;">
                         <div class="config-section">
-                            <h4>步骤1：定义你要合并的目标字段</h4>
-                            <p class="usage-tip">例如：姓名、手机号、身份证号、参赛项目……</p>
+                            <h4>步骤1：定义目标字段</h4>
                             <div id="targetFieldsContainer" class="target-fields"></div>
                             <button class="add-field" onclick="addTargetField()">➕ 添加目标字段</button>
                         </div>
-
                         <div class="config-section">
-                            <h4>步骤2：为每个目标字段选择对应的源文件列</h4>
-                            <p class="usage-tip">对于每个目标字段，从下方各文件的表头中选择匹配的列名。</p>
+                            <h4>步骤2：为每个目标字段选择源列</h4>
                             <div id="mappingContainer"></div>
                         </div>
-
                         <div style="text-align: center; margin: 20px 0;">
-                            <button onclick="mergeAndExport()" style="background: #7c3aed; font-size: 16px;">🚀 开始合并并下载总表</button>
+                            <button onclick="mergeAndExport()" style="background: #7c3aed;">🚀 合并下载</button>
                         </div>
                     </div>
                 </div>
@@ -352,8 +572,7 @@
             <div id="translate-section" style="display: none;">
                 <div class="tool-box">
                     <h3>🌐 MyMemory 翻译（免密钥）</h3>
-                    <p style="color: #a1a1aa;">每天免费1000次，个人足够</p>
-
+                    <p style="color: #a1a1aa;">每天免费1000次</p>
                     <div class="lang-selector">
                         <select id="sourceLang">
                             <option value="auto">自动检测</option>
@@ -364,9 +583,7 @@
                             <option value="fr">法语</option>
                             <option value="de">德语</option>
                         </select>
-                        
-                        <button class="switch-btn" onclick="swapLanguages()" title="交换语言">⇄</button>
-                        
+                        <button class="switch-btn" onclick="swapLanguages()">⇄</button>
                         <select id="targetLang">
                             <option value="en">英语</option>
                             <option value="zh" selected>中文</option>
@@ -376,14 +593,33 @@
                             <option value="de">德语</option>
                         </select>
                     </div>
-                    
                     <input type="text" id="translateInput" placeholder="输入要翻译的文字">
                     <button onclick="doMyMemoryTranslation()" style="background: #7c3aed;">翻译</button>
-                    
-                    <div class="translation-result" id="translationResult">
-                        翻译结果会显示在这里
+                    <div class="translation-result" id="translationResult"></div>
+                </div>
+            </div>
+
+            <!-- 图片库（文件夹模式，可删除本地文件） -->
+            <div id="image-section" style="display: none;">
+                <div class="tool-box">
+                    <div class="card-header">
+                        <h3>🖼️ 图片素材库（本地文件夹）</h3>
+                        <span class="badge" id="imageCount">0张</span>
                     </div>
-                    <div class="usage-tip">基于 MyMemory 翻译服务，无需密钥。</div>
+                    <button onclick="selectImageFolder()">📂 选择图片文件夹</button>
+                    <div id="imageGrid" class="image-grid"></div>
+                </div>
+            </div>
+
+            <!-- 文档库（文件夹模式，可删除本地文件） -->
+            <div id="doc-section" style="display: none;">
+                <div class="tool-box">
+                    <div class="card-header">
+                        <h3>📄 文档素材库（本地文件夹）</h3>
+                        <span class="badge" id="docCount">0个</span>
+                    </div>
+                    <button onclick="selectDocFolder()">📂 选择文档文件夹</button>
+                    <div id="docList" class="doc-list"></div>
                 </div>
             </div>
 
@@ -396,430 +632,589 @@
             </div>
 
             <div class="footer">
-                ⚡ 完全免费 · 本地处理 · 永不收费 · 糖油果子专属 · v5.0 可编辑日历
+                ⚡ 完全免费 · 本地处理 · 永不收费 · 糖油果子专属 · v10.0 完美图片预览
             </div>
         </div>
     </div>
 
-    <!-- 引入库 -->
+    <!-- 引入其他库 -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 
     <script>
-        // ---------- 全局变量 ----------
-        let currentDate = new Date();
-        let currentDateStr = formatDate(currentDate);
+        (function() {
+            // ========== 文件夹模式 (File System Access API，支持删除本地文件) ==========
+            let imageFolderHandle = null;
+            let docFolderHandle = null;
+            let imageFileList = [];   // 存储图片文件句柄和元数据
+            let docFileList = [];
+            let viewer = null;         // Viewer.js 实例
 
-        // ---------- 导航切换 ----------
-        function showSection(section, element) {
-            // 隐藏所有内容块
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('merge-section').style.display = 'none';
-            document.getElementById('qrcode-section').style.display = 'none';
-            document.getElementById('translate-section').style.display = 'none';
-            document.getElementById('settings-section').style.display = 'none';
-            
-            // 显示选中的块
-            document.getElementById(section + '-section').style.display = 'block';
-            
-            // 高亮导航
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        // ---------- 日期工具函数 ----------
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function formatDisplayDate(dateStr) {
-            const [year, month, day] = dateStr.split('-');
-            const d = new Date(year, month-1, day);
-            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-            return `${year}年${month}月${day}日 ${weekdays[d.getDay()]}`;
-        }
-
-        // 初始化日期显示
-        function updateDateDisplay() {
-            document.getElementById('currentDateDisplay').innerText = formatDisplayDate(currentDateStr);
-            document.getElementById('datePicker').value = currentDateStr;
-        }
-
-        // 切换日期（偏移量：-1 前一天，1 后一天）
-        function changeDate(delta) {
-            const newDate = new Date(currentDate);
-            newDate.setDate(newDate.getDate() + delta);
-            currentDate = newDate;
-            currentDateStr = formatDate(currentDate);
-            updateDateDisplay();
-            loadSchedules();
-        }
-
-        // 日期选择器手动选择
-        document.addEventListener('DOMContentLoaded', function() {
-            const picker = document.getElementById('datePicker');
-            if (picker) {
-                picker.addEventListener('change', function(e) {
-                    const newDateStr = e.target.value;
-                    if (newDateStr) {
-                        currentDateStr = newDateStr;
-                        currentDate = new Date(newDateStr + 'T00:00:00');
-                        updateDateDisplay();
-                        loadSchedules();
-                    }
-                });
-            }
-            // 初始化加载今天的日程
-            updateDateDisplay();
-            loadSchedules();
-        });
-
-        // ---------- 日程存储 ----------
-        function getStorageKey() {
-            return `schedules_${currentDateStr}`;
-        }
-
-        function loadSchedules() {
-            const stored = localStorage.getItem(getStorageKey());
-            const schedules = stored ? JSON.parse(stored) : [];
-            renderSchedules(schedules);
-        }
-
-        function saveSchedules(schedules) {
-            localStorage.setItem(getStorageKey(), JSON.stringify(schedules));
-        }
-
-        function renderSchedules(schedules) {
-            const container = document.getElementById('scheduleList');
-            if (!container) return;
-            
-            if (schedules.length === 0) {
-                container.innerHTML = '<p style="color:#71717a; text-align:center; padding:20px;">今日暂无日程，添加一条吧～</p>';
-                return;
+            // 检查浏览器是否支持
+            if (!window.showDirectoryPicker) {
+                alert('你的浏览器不支持文件夹选择功能，请使用 Chrome/Edge 86+ 浏览器。');
             }
 
-            let html = '';
-            schedules.forEach((item, index) => {
-                const timeHtml = item.time ? `<span class="schedule-time">${item.time}</span>` : '<span class="schedule-time" style="color:#71717a;">(未填)</span>';
-                html += `
-                    <div class="schedule-item" data-index="${index}">
-                        ${timeHtml}
-                        <span class="schedule-desc">${item.desc}</span>
-                        <div class="schedule-actions">
-                            <button onclick="editSchedule(${index})">编辑</button>
-                            <button onclick="deleteSchedule(${index})" style="background:#e25a4a;">删除</button>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // 添加新日程
-        function addSchedule() {
-            const timeInput = document.getElementById('newScheduleTime');
-            const descInput = document.getElementById('newScheduleDesc');
-            const time = timeInput.value.trim();
-            const desc = descInput.value.trim();
-            if (!desc) {
-                alert('请填写日程内容');
-                return;
-            }
-
-            const stored = localStorage.getItem(getStorageKey());
-            const schedules = stored ? JSON.parse(stored) : [];
-            schedules.push({ time, desc });
-            saveSchedules(schedules);
-            renderSchedules(schedules);
-
-            // 清空输入框
-            timeInput.value = '';
-            descInput.value = '';
-        }
-
-        // 删除日程
-        function deleteSchedule(index) {
-            const stored = localStorage.getItem(getStorageKey());
-            const schedules = stored ? JSON.parse(stored) : [];
-            schedules.splice(index, 1);
-            saveSchedules(schedules);
-            renderSchedules(schedules);
-        }
-
-        // 编辑日程（使用prompt简单编辑）
-        function editSchedule(index) {
-            const stored = localStorage.getItem(getStorageKey());
-            const schedules = stored ? JSON.parse(stored) : [];
-            const item = schedules[index];
-            
-            // 分别编辑时间和内容
-            const newTime = prompt('编辑时间（可选）', item.time || '');
-            if (newTime === null) return; // 取消
-            const newDesc = prompt('编辑内容', item.desc);
-            if (newDesc === null) return;
-
-            schedules[index] = { time: newTime.trim(), desc: newDesc.trim() };
-            saveSchedules(schedules);
-            renderSchedules(schedules);
-        }
-
-        // ---------- 二维码生成 ----------
-        function generateQR() {
-            let text = document.getElementById('qrInput').value;
-            if (!text) { alert('请输入内容'); return; }
-            let qrDiv = document.getElementById('qrResult');
-            qrDiv.innerHTML = '';
-            new QRCode(qrDiv, { text: text, width: 180, height: 180 });
-        }
-
-        // ---------- 翻译功能 (MyMemory) ----------
-        function swapLanguages() {
-            const sourceSelect = document.getElementById('sourceLang');
-            const targetSelect = document.getElementById('targetLang');
-            
-            if (sourceSelect.value === 'auto') {
-                alert('自动检测不能作为目标语言，请先选择源语言');
-                return;
-            }
-            
-            const temp = sourceSelect.value;
-            sourceSelect.value = targetSelect.value;
-            targetSelect.value = temp;
-        }
-
-        async function doMyMemoryTranslation() {
-            const text = document.getElementById('translateInput').value.trim();
-            if (!text) { alert('请输入要翻译的文字'); return; }
-
-            const source = document.getElementById('sourceLang').value;
-            const target = document.getElementById('targetLang').value;
-            const resultDiv = document.getElementById('translationResult');
-            
-            const langpair = (source === 'auto' ? '' : source) + '|' + target;
-            
-            resultDiv.innerHTML = '⏳ 翻译中...';
-            resultDiv.style.color = '#a1a1aa';
-
-            try {
-                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.responseData && data.responseData.translatedText) {
-                    resultDiv.innerHTML = data.responseData.translatedText;
-                    resultDiv.style.color = '#e1e1e6';
-                } else {
-                    throw new Error('翻译失败');
-                }
-            } catch (error) {
-                resultDiv.innerHTML = '❌ 翻译失败，请稍后重试';
-                resultDiv.style.color = '#d32f2f';
-            }
-        }
-
-        // ---------- 马拉松合并器 (保持之前完整代码) ----------
-        let uploadedFiles = [];
-        let targetFields = ['姓名', '手机号', '身份证号'];
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput) fileInput.addEventListener('change', handleFileSelect);
-        });
-
-        async function handleFileSelect(event) {
-            const files = Array.from(event.target.files);
-            if (files.length === 0) return;
-
-            document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
-            document.getElementById('fileListContainer').style.display = 'block';
-            
-            const fileListDiv = document.getElementById('fileList');
-            fileListDiv.innerHTML = '<div>正在解析文件，请稍候...</div>';
-
-            for (let file of files) {
+            // 选择图片文件夹（请求读写权限）
+            window.selectImageFolder = async function() {
                 try {
-                    const data = await readFileAsArrayBuffer(file);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    
-                    if (jsonData.length < 1) continue;
-                    
-                    const headers = jsonData[0];
-                    const previewRows = jsonData.slice(1, 4);
-                    
-                    uploadedFiles.push({
-                        name: file.name,
-                        data: jsonData,
-                        headers: headers,
-                        previewRows: previewRows
-                    });
-                } catch (e) {
-                    alert(`解析文件 ${file.name} 失败: ${e.message}`);
+                    imageFolderHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+                    await listFilesInFolder(imageFolderHandle, 'image');
+                } catch (err) {
+                    console.log('用户取消选择或出错', err);
+                }
+            };
+
+            // 选择文档文件夹
+            window.selectDocFolder = async function() {
+                try {
+                    docFolderHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+                    await listFilesInFolder(docFolderHandle, 'doc');
+                } catch (err) {
+                    console.log('用户取消选择或出错', err);
+                }
+            };
+
+            // 遍历文件夹，筛选图片/文档
+            async function listFilesInFolder(folderHandle, type) {
+                const files = [];
+                for await (const entry of folderHandle.values()) {
+                    if (entry.kind === 'file') {
+                        const file = await entry.getFile();
+                        // 根据类型过滤
+                        if (type === 'image' && file.type.startsWith('image/')) {
+                            files.push({ handle: entry, file, name: file.name, url: URL.createObjectURL(file) });
+                        } else if (type === 'doc') {
+                            // 文档类型：pdf, doc, docx, txt, xls, xlsx, ppt, pptx
+                            const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+                            if (docTypes.includes(file.type) || file.name.match(/\.(pdf|doc|docx|txt|xls|xlsx|ppt|pptx)$/i)) {
+                                files.push({ handle: entry, file, name: file.name, url: URL.createObjectURL(file) });
+                            }
+                        }
+                    }
+                }
+                if (type === 'image') {
+                    imageFileList = files;
+                    renderImageGrid();
+                } else {
+                    docFileList = files;
+                    renderDocList();
                 }
             }
 
-            renderFileList();
-            if (uploadedFiles.length > 0) {
-                document.getElementById('configArea').style.display = 'block';
-                renderTargetFields();
-                renderMapping();
-            }
-        }
-
-        function readFileAsArrayBuffer(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.onerror = reject;
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        function renderFileList() {
-            const fileListDiv = document.getElementById('fileList');
-            fileListDiv.innerHTML = '';
-            uploadedFiles.forEach((f, index) => {
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.innerHTML = `
-                    <span>📄 ${f.name}</span>
-                    <span class="file-remove" onclick="removeFile(${index})" style="color:#e25a4a; cursor:pointer;">✖</span>
-                `;
-                fileListDiv.appendChild(item);
-            });
-        }
-
-        function removeFile(index) {
-            uploadedFiles.splice(index, 1);
-            renderFileList();
-            if (uploadedFiles.length === 0) {
-                document.getElementById('configArea').style.display = 'none';
-                document.getElementById('fileListContainer').style.display = 'none';
-                document.getElementById('fileCount').innerText = '';
-            } else {
-                renderMapping();
-            }
-        }
-
-        function renderTargetFields() {
-            const container = document.getElementById('targetFieldsContainer');
-            container.innerHTML = '';
-            targetFields.forEach((field, idx) => {
-                const row = document.createElement('div');
-                row.className = 'field-row';
-                row.innerHTML = `
-                    <input type="text" value="${field}" placeholder="字段名" onchange="updateTargetField(${idx}, this.value)">
-                    <button onclick="removeTargetField(${idx})" style="background:#e25a4a;">删除</button>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function updateTargetField(idx, newValue) {
-            targetFields[idx] = newValue;
-            renderMapping();
-        }
-
-        function addTargetField() {
-            targetFields.push('新字段');
-            renderTargetFields();
-            renderMapping();
-        }
-
-        function removeTargetField(idx) {
-            targetFields.splice(idx, 1);
-            renderTargetFields();
-            renderMapping();
-        }
-
-        function renderMapping() {
-            const container = document.getElementById('mappingContainer');
-            if (uploadedFiles.length === 0) return;
-            
-            container.innerHTML = '';
-            
-            targetFields.forEach((targetField, targetIdx) => {
-                const fieldDiv = document.createElement('div');
-                fieldDiv.style.marginBottom = '20px';
-                fieldDiv.style.padding = '10px';
-                fieldDiv.style.background = '#1a1a1f';
-                fieldDiv.style.borderRadius = '8px';
-                
-                fieldDiv.innerHTML = `<strong style="font-size:16px;">📌 ${targetField}</strong>`;
-                
-                uploadedFiles.forEach((file, fileIdx) => {
-                    const fileHeader = file.headers || [];
-                    const selectId = `map_${targetIdx}_${fileIdx}`;
-                    
-                    const row = document.createElement('div');
-                    row.style.marginTop = '8px';
-                    row.style.display = 'flex';
-                    row.style.alignItems = 'center';
-                    row.style.gap = '10px';
-                    
-                    row.innerHTML = `
-                        <span style="width:150px; overflow:hidden; text-overflow:ellipsis;" title="${file.name}">📁 ${file.name.substring(0,20)}...</span>
-                        <select id="${selectId}" style="flex:1; background:#25252b;">
-                            <option value="">-- 忽略此列 --</option>
-                            ${fileHeader.map(h => `<option value="${h}">${h}</option>`).join('')}
-                        </select>
+            // 渲染图片网格
+            function renderImageGrid() {
+                const grid = document.getElementById('imageGrid');
+                const countSpan = document.getElementById('imageCount');
+                if (imageFileList.length === 0) {
+                    grid.innerHTML = '<p style="color:#71717a; text-align:center;">文件夹中没有图片</p>';
+                    countSpan.innerText = '0张';
+                    return;
+                }
+                countSpan.innerText = imageFileList.length + '张';
+                let html = '';
+                imageFileList.forEach((item, index) => {
+                    html += `
+                        <div class="image-item" data-index="${index}">
+                            <img src="${item.url}" alt="${item.name}" title="${item.name}">
+                            <div class="image-name">${item.name}</div>
+                            <button class="image-remove" onclick="deleteLocalFile(${index}, 'image')">永久删除</button>
+                        </div>
                     `;
-                    
-                    fieldDiv.appendChild(row);
                 });
-                
-                container.appendChild(fieldDiv);
-            });
-        }
+                grid.innerHTML = html;
 
-        function mergeAndExport() {
-            if (uploadedFiles.length === 0) { alert('请先上传文件'); return; }
-            if (targetFields.length === 0) { alert('请至少定义一个目标字段'); return; }
+                // 初始化/更新 Viewer.js
+                initImageViewer();
+            }
 
-            const mappings = targetFields.map((targetField, targetIdx) => {
-                const fileMappings = [];
-                uploadedFiles.forEach((file, fileIdx) => {
-                    const select = document.getElementById(`map_${targetIdx}_${fileIdx}`);
-                    if (select && select.value) {
-                        fileMappings.push({ fileIdx, sourceColumn: select.value });
+            // 初始化图片查看器（Viewer.js）
+            function initImageViewer() {
+                const grid = document.getElementById('imageGrid');
+                if (!grid) return;
+
+                // 如果已有 viewer 实例，先销毁
+                if (viewer) {
+                    viewer.destroy();
+                }
+
+                // 创建新的 Viewer 实例，绑定到图片网格上的所有 img 元素
+                viewer = new Viewer(grid, {
+                    url: 'src',           // 使用 img 的 src 属性作为大图
+                    title: true,           // 显示图片标题
+                    toolbar: true,         // 显示工具栏
+                    movable: true,         // 允许移动图片
+                    zoomable: true,        // 允许缩放
+                    rotatable: true,       // 允许旋转
+                    scalable: true,        // 允许翻转
+                    transition: true,      // 使用过渡动画
+                    keyboard: true,        // 允许键盘操作（左右箭头切换）
+                    fullscreen: true,       // 允许全屏
+                    tooltip: true,          // 显示工具提示
+                    // 当查看器准备就绪时，可添加额外逻辑
+                    ready() {
+                        console.log('Viewer 已就绪');
                     }
                 });
-                return { targetField, fileMappings };
-            });
+            }
 
-            const mergedData = [targetFields];
-
-            uploadedFiles.forEach((file, fileIdx) => {
-                const jsonData = file.data;
-                if (jsonData.length <= 1) return;
-                
-                const fileHeaders = file.headers;
-                const dataRows = jsonData.slice(1);
-                
-                dataRows.forEach(row => {
-                    const newRow = [];
-                    mappings.forEach(({ fileMappings }) => {
-                        const mapping = fileMappings.find(m => m.fileIdx === fileIdx);
-                        if (mapping) {
-                            const colIdx = fileHeaders.indexOf(mapping.sourceColumn);
-                            newRow.push(colIdx !== -1 && colIdx < row.length ? row[colIdx] : '');
-                        } else {
-                            newRow.push('');
-                        }
-                    });
-                    mergedData.push(newRow);
+            // 渲染文档列表
+            function renderDocList() {
+                const list = document.getElementById('docList');
+                const countSpan = document.getElementById('docCount');
+                if (docFileList.length === 0) {
+                    list.innerHTML = '<p style="color:#71717a; text-align:center;">文件夹中没有文档</p>';
+                    countSpan.innerText = '0个';
+                    return;
+                }
+                countSpan.innerText = docFileList.length + '个';
+                let html = '';
+                docFileList.forEach((item, index) => {
+                    let icon = '📄';
+                    if (item.name.match(/\.pdf$/i)) icon = '📕';
+                    else if (item.name.match(/\.docx?$/i)) icon = '📘';
+                    else if (item.name.match(/\.xlsx?$/i)) icon = '📊';
+                    else if (item.name.match(/\.pptx?$/i)) icon = '📽️';
+                    else if (item.name.match(/\.txt$/i)) icon = '📃';
+                    html += `
+                        <div class="doc-item">
+                            <span class="doc-icon">${icon}</span>
+                            <span class="doc-name">${item.name}</span>
+                            <div class="doc-actions">
+                                <button onclick="openLocalFile('${index}', 'doc')">打开</button>
+                                <button class="doc-remove" onclick="deleteLocalFile(${index}, 'doc')">永久删除</button>
+                            </div>
+                        </div>
+                    `;
                 });
+                list.innerHTML = html;
+            }
+
+            // 打开文件（用系统默认程序）
+            window.openLocalFile = async function(index, type) {
+                const list = type === 'image' ? imageFileList : docFileList;
+                const item = list[index];
+                const file = await item.handle.getFile();
+                const url = URL.createObjectURL(file);
+                window.open(url, '_blank');
+            };
+
+            // 删除本地文件（永久删除）
+            window.deleteLocalFile = async function(index, type) {
+                const list = type === 'image' ? imageFileList : docFileList;
+                const item = list[index];
+                if (!confirm(`确定要永久删除文件 "${item.name}" 吗？此操作不可恢复。`)) return;
+
+                try {
+                    // 请求文件句柄的删除权限（如果之前有读写权限，应该直接可用）
+                    await item.handle.remove();
+                    // 从列表中移除
+                    list.splice(index, 1);
+                    // 重新渲染
+                    if (type === 'image') {
+                        renderImageGrid();
+                    } else {
+                        renderDocList();
+                    }
+                } catch (err) {
+                    alert('删除失败：' + err.message);
+                    console.error(err);
+                }
+            };
+
+            // ========== 以下为原有功能（日历、日程、便利贴、合并器、二维码、翻译），保持不变 ==========
+            let currentDisplayYear, currentDisplayMonth;
+            let selectedDate = null;
+            let todayStr = formatDate(new Date());
+
+            function initDashboard() {
+                const today = new Date();
+                currentDisplayYear = today.getFullYear();
+                currentDisplayMonth = today.getMonth() + 1;
+                selectedDate = todayStr;
+                renderCalendar();
+                startClock();
+                loadStickyNote();
+                loadSchedulesForSelectedDate();
+            }
+
+            function startClock() {
+                updateClock();
+                setInterval(updateClock, 1000);
+            }
+            function updateClock() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+                document.getElementById('liveClock').innerText = timeStr;
+            }
+
+            function getLunarInfo(year, month, day) {
+                try {
+                    if (typeof Lunar === 'undefined') return { lunarDayStr: '', festivals: [] };
+                    const date = new Date(year, month-1, day);
+                    const lunar = Lunar.fromDate(date);
+                    const lunarMonth = lunar.getMonthInChinese();
+                    const lunarDay = lunar.getDayInChinese();
+                    const lunarDayStr = lunarMonth + lunarDay;
+                    const festivals = [];
+                    const festival = lunar.getFestival();
+                    if (festival) festivals.push(festival);
+                    const jieqi = lunar.getJieQi();
+                    if (jieqi) festivals.push(jieqi);
+                    const holiday = lunar.getHoliday();
+                    if (holiday && holiday.getName) festivals.push(holiday.getName());
+                    return { lunarDayStr, festivals };
+                } catch (e) {
+                    return { lunarDayStr: '', festivals: [] };
+                }
+            }
+
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            function renderCalendar() {
+                const monthYearEl = document.getElementById('calendarMonthYear');
+                monthYearEl.innerText = `${currentDisplayYear}年${currentDisplayMonth}月`;
+                const firstDay = new Date(currentDisplayYear, currentDisplayMonth - 1, 1);
+                const startWeekday = firstDay.getDay();
+                const daysInMonth = new Date(currentDisplayYear, currentDisplayMonth, 0).getDate();
+                let html = '';
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                weekdays.forEach(w => html += `<div class="calendar-weekday">${w}</div>`);
+                for (let i = 0; i < startWeekday; i++) html += '<div class="calendar-day"></div>';
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${currentDisplayYear}-${String(currentDisplayMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    const isToday = (dateStr === todayStr);
+                    const isSelected = (dateStr === selectedDate);
+                    const hasEvent = checkHasEvent(dateStr);
+                    const lunarInfo = getLunarInfo(currentDisplayYear, currentDisplayMonth, d);
+                    let lunarDisplay = lunarInfo.lunarDayStr;
+                    let festivalDisplay = (lunarInfo.festivals && lunarInfo.festivals.length) ? lunarInfo.festivals[0] : '';
+                    let classes = 'calendar-day';
+                    if (isToday) classes += ' today';
+                    if (isSelected) classes += ' selected';
+                    if (hasEvent) classes += ' has-event';
+                    html += `<div class="${classes}" onclick="selectDate('${dateStr}')">
+                        <div class="solar-day">${d}</div>
+                        ${lunarDisplay ? `<div class="lunar-info">${lunarDisplay}</div>` : ''}
+                        ${festivalDisplay ? `<div class="festival-tag" title="${festivalDisplay}">${festivalDisplay}</div>` : ''}
+                    </div>`;
+                }
+                document.getElementById('calendarGrid').innerHTML = html;
+            }
+
+            function checkHasEvent(dateStr) {
+                const stored = localStorage.getItem(`schedules_${dateStr}`);
+                if (!stored) return false;
+                try { return JSON.parse(stored).length > 0; } catch { return false; }
+            }
+
+            function changeMonth(delta) {
+                currentDisplayMonth += delta;
+                if (currentDisplayMonth < 1) { currentDisplayMonth = 12; currentDisplayYear--; }
+                else if (currentDisplayMonth > 12) { currentDisplayMonth = 1; currentDisplayYear++; }
+                renderCalendar();
+            }
+
+            function selectDate(dateStr) {
+                selectedDate = dateStr;
+                renderCalendar();
+                document.getElementById('selectedDateDisplay').innerText = dateStr;
+                loadSchedulesForSelectedDate();
+            }
+
+            function loadSchedulesForSelectedDate() {
+                if (!selectedDate) return;
+                const stored = localStorage.getItem(`schedules_${selectedDate}`);
+                const schedules = stored ? JSON.parse(stored) : [];
+                renderSchedules(schedules);
+                document.getElementById('eventCount').innerText = schedules.length + '条';
+            }
+
+            function renderSchedules(schedules) {
+                const container = document.getElementById('scheduleList');
+                if (!container) return;
+                if (schedules.length === 0) {
+                    container.innerHTML = '<p style="color:#71717a; text-align:center; padding:20px;">今日暂无日程，添加一条吧～</p>';
+                    return;
+                }
+                let html = '';
+                schedules.forEach((item, index) => {
+                    const timeHtml = item.time ? `<span class="schedule-time">${item.time}</span>` : '<span class="schedule-time" style="color:#71717a;">(未填)</span>';
+                    html += `
+                        <div class="schedule-item">
+                            ${timeHtml}
+                            <span class="schedule-desc">${item.desc}</span>
+                            <div class="schedule-actions">
+                                <button onclick="editSchedule(${index})">编辑</button>
+                                <button onclick="deleteSchedule(${index})" style="background:#e25a4a;">删除</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            function addSchedule() {
+                if (!selectedDate) { alert('请先选择日期'); return; }
+                const time = document.getElementById('newScheduleTime').value.trim();
+                const desc = document.getElementById('newScheduleDesc').value.trim();
+                if (!desc) { alert('请填写日程内容'); return; }
+                const stored = localStorage.getItem(`schedules_${selectedDate}`);
+                const schedules = stored ? JSON.parse(stored) : [];
+                schedules.push({ time, desc });
+                localStorage.setItem(`schedules_${selectedDate}`, JSON.stringify(schedules));
+                document.getElementById('newScheduleTime').value = '';
+                document.getElementById('newScheduleDesc').value = '';
+                loadSchedulesForSelectedDate();
+                renderCalendar();
+            }
+
+            window.deleteSchedule = function(index) {
+                if (!selectedDate) return;
+                const stored = localStorage.getItem(`schedules_${selectedDate}`);
+                const schedules = stored ? JSON.parse(stored) : [];
+                schedules.splice(index, 1);
+                localStorage.setItem(`schedules_${selectedDate}`, JSON.stringify(schedules));
+                loadSchedulesForSelectedDate();
+                renderCalendar();
+            };
+
+            window.editSchedule = function(index) {
+                if (!selectedDate) return;
+                const stored = localStorage.getItem(`schedules_${selectedDate}`);
+                const schedules = stored ? JSON.parse(stored) : [];
+                const item = schedules[index];
+                const newTime = prompt('编辑时间（可选）', item.time || '');
+                if (newTime === null) return;
+                const newDesc = prompt('编辑内容', item.desc);
+                if (newDesc === null) return;
+                schedules[index] = { time: newTime.trim(), desc: newDesc.trim() };
+                localStorage.setItem(`schedules_${selectedDate}`, JSON.stringify(schedules));
+                loadSchedulesForSelectedDate();
+                renderCalendar();
+            };
+
+            function loadStickyNote() {
+                const saved = localStorage.getItem('sticky_note');
+                const textarea = document.getElementById('stickyNote');
+                if (saved) textarea.value = saved;
+                textarea.addEventListener('input', function() {
+                    localStorage.setItem('sticky_note', this.value);
+                });
+            }
+
+            function showSection(section, element) {
+                document.getElementById('dashboard-section').style.display = 'none';
+                document.getElementById('merge-section').style.display = 'none';
+                document.getElementById('qrcode-section').style.display = 'none';
+                document.getElementById('translate-section').style.display = 'none';
+                document.getElementById('image-section').style.display = 'none';
+                document.getElementById('doc-section').style.display = 'none';
+                document.getElementById('settings-section').style.display = 'none';
+                document.getElementById(section + '-section').style.display = 'block';
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                if (section === 'dashboard') renderCalendar();
+                if (section === 'image') renderImageGrid();  // 重新渲染会重建viewer
+                if (section === 'doc') renderDocList();
+            }
+
+            // 合并器相关函数
+            let uploadedFiles = [];
+            let targetFields = ['姓名', '手机号', '身份证号'];
+
+            async function handleFileSelect(event) {
+                const files = Array.from(event.target.files);
+                if (files.length === 0) return;
+                document.getElementById('fileCount').innerText = `已选择 ${files.length} 个文件`;
+                document.getElementById('fileListContainer').style.display = 'block';
+                document.getElementById('fileList').innerHTML = '<div>正在解析文件...</div>';
+                for (let file of files) {
+                    try {
+                        const data = await readFileAsArrayBuffer(file);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                        if (jsonData.length < 1) continue;
+                        const headers = jsonData[0];
+                        const previewRows = jsonData.slice(1, 4);
+                        uploadedFiles.push({ name: file.name, data: jsonData, headers, previewRows });
+                    } catch (e) { alert(`解析文件 ${file.name} 失败: ${e.message}`); }
+                }
+                renderFileList();
+                if (uploadedFiles.length > 0) {
+                    document.getElementById('configArea').style.display = 'block';
+                    renderTargetFields();
+                    renderMapping();
+                }
+            }
+
+            function readFileAsArrayBuffer(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
+            function renderFileList() {
+                const fileListDiv = document.getElementById('fileList');
+                fileListDiv.innerHTML = '';
+                uploadedFiles.forEach((f, index) => {
+                    fileListDiv.innerHTML += `<div class="file-item"><span>📄 ${f.name}</span><span class="file-remove" onclick="removeFile(${index})" style="color:#e25a4a; cursor:pointer;">✖</span></div>`;
+                });
+            }
+
+            window.removeFile = function(index) {
+                uploadedFiles.splice(index, 1);
+                renderFileList();
+                if (uploadedFiles.length === 0) {
+                    document.getElementById('configArea').style.display = 'none';
+                    document.getElementById('fileListContainer').style.display = 'none';
+                    document.getElementById('fileCount').innerText = '';
+                } else renderMapping();
+            };
+
+            function renderTargetFields() {
+                const container = document.getElementById('targetFieldsContainer');
+                container.innerHTML = '';
+                targetFields.forEach((field, idx) => {
+                    container.innerHTML += `
+                        <div class="field-row">
+                            <input type="text" value="${field}" onchange="updateTargetField(${idx}, this.value)">
+                            <button onclick="removeTargetField(${idx})" style="background:#e25a4a;">删除</button>
+                        </div>`;
+                });
+            }
+            window.updateTargetField = function(idx, val) { targetFields[idx] = val; renderMapping(); };
+            window.addTargetField = function() { targetFields.push('新字段'); renderTargetFields(); renderMapping(); };
+            window.removeTargetField = function(idx) { targetFields.splice(idx, 1); renderTargetFields(); renderMapping(); };
+
+            function renderMapping() {
+                const container = document.getElementById('mappingContainer');
+                if (uploadedFiles.length === 0) return;
+                container.innerHTML = '';
+                targetFields.forEach((targetField, targetIdx) => {
+                    let fieldHtml = `<div style="margin-bottom:20px; padding:10px; background:#1a1a1f; border-radius:8px;"><strong>📌 ${targetField}</strong>`;
+                    uploadedFiles.forEach((file, fileIdx) => {
+                        const fileHeader = file.headers || [];
+                        fieldHtml += `
+                            <div style="margin-top:8px; display:flex; gap:10px; align-items:center;">
+                                <span style="width:150px; overflow:hidden; text-overflow:ellipsis;" title="${file.name}">📁 ${file.name.substring(0,20)}...</span>
+                                <select id="map_${targetIdx}_${fileIdx}" style="flex:1; background:#25252b;">
+                                    <option value="">-- 忽略 --</option>
+                                    ${fileHeader.map(h => `<option value="${h}">${h}</option>`).join('')}
+                                </select>
+                            </div>`;
+                    });
+                    fieldHtml += '</div>';
+                    container.innerHTML += fieldHtml;
+                });
+            }
+
+            window.mergeAndExport = function() {
+                if (uploadedFiles.length === 0) { alert('请先上传文件'); return; }
+                if (targetFields.length === 0) { alert('请至少定义一个目标字段'); return; }
+                const mappings = targetFields.map((targetField, targetIdx) => {
+                    const fileMappings = [];
+                    uploadedFiles.forEach((file, fileIdx) => {
+                        const select = document.getElementById(`map_${targetIdx}_${fileIdx}`);
+                        if (select && select.value) fileMappings.push({ fileIdx, sourceColumn: select.value });
+                    });
+                    return { targetField, fileMappings };
+                });
+                const mergedData = [targetFields];
+                uploadedFiles.forEach((file, fileIdx) => {
+                    const jsonData = file.data;
+                    if (jsonData.length <= 1) return;
+                    const fileHeaders = file.headers;
+                    const dataRows = jsonData.slice(1);
+                    dataRows.forEach(row => {
+                        const newRow = [];
+                        mappings.forEach(({ fileMappings }) => {
+                            const mapping = fileMappings.find(m => m.fileIdx === fileIdx);
+                            if (mapping) {
+                                const colIdx = fileHeaders.indexOf(mapping.sourceColumn);
+                                newRow.push(colIdx !== -1 && colIdx < row.length ? row[colIdx] : '');
+                            } else {
+                                newRow.push('');
+                            }
+                        });
+                        mergedData.push(newRow);
+                    });
+                });
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(mergedData);
+                XLSX.utils.book_append_sheet(wb, ws, '合并结果');
+                XLSX.writeFile(wb, `马拉松合并表_${new Date().toISOString().slice(0,10)}.xlsx`);
+            };
+
+            // 二维码生成
+            window.generateQR = function() {
+                let text = document.getElementById('qrInput').value;
+                if (!text) { alert('请输入内容'); return; }
+                let qrDiv = document.getElementById('qrResult');
+                qrDiv.innerHTML = '';
+                new QRCode(qrDiv, { text: text, width: 180, height: 180 });
+            };
+
+            // 翻译
+            window.swapLanguages = function() {
+                const sourceSelect = document.getElementById('sourceLang');
+                const targetSelect = document.getElementById('targetLang');
+                if (sourceSelect.value === 'auto') {
+                    alert('自动检测不能作为目标语言，请先选择源语言');
+                    return;
+                }
+                const temp = sourceSelect.value;
+                sourceSelect.value = targetSelect.value;
+                targetSelect.value = temp;
+            };
+
+            window.doMyMemoryTranslation = async function() {
+                const text = document.getElementById('translateInput').value.trim();
+                if (!text) { alert('请输入要翻译的文字'); return; }
+                const source = document.getElementById('sourceLang').value;
+                const target = document.getElementById('targetLang').value;
+                const resultDiv = document.getElementById('translationResult');
+                const langpair = (source === 'auto' ? '' : source) + '|' + target;
+                resultDiv.innerHTML = '⏳ 翻译中...';
+                resultDiv.style.color = '#a1a1aa';
+                try {
+                    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.responseData && data.responseData.translatedText) {
+                        resultDiv.innerHTML = data.responseData.translatedText;
+                        resultDiv.style.color = '#e1e1e6';
+                    } else {
+                        throw new Error('翻译失败');
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = '❌ 翻译失败，请稍后重试';
+                    resultDiv.style.color = '#d32f2f';
+                }
+            };
+
+            // 绑定事件
+            document.addEventListener('DOMContentLoaded', function() {
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput) fileInput.addEventListener('change', handleFileSelect);
+                initDashboard();
             });
 
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(mergedData);
-            XLSX.utils.book_append_sheet(wb, ws, '合并结果');
-            XLSX.writeFile(wb, `马拉松合并表_${new Date().toISOString().slice(0,10)}.xlsx`);
-        }
+            // 暴露一些函数给HTML
+            window.changeMonth = changeMonth;
+            window.selectDate = selectDate;
+            window.addSchedule = addSchedule;
+            window.showSection = showSection;
+        })();
     </script>
 </body>
 </html>
